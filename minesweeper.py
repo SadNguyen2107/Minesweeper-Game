@@ -30,9 +30,11 @@
 import random
 import sys
 
+
 def translateintoHumanReadable(Pos):
     x_coordinate, y_coordinate = Pos
     return x_coordinate + 1, y_coordinate + 1
+
 
 class Player:
     def __init__(self, name: str) -> None:
@@ -55,12 +57,13 @@ class Player:
     def checkSituation(self):
         if self.isExploded:
             print(f"{self.name} just have exploded")
-            
 
     def winGame(self, winSignal: bool):
         if winSignal:
             print("Congratulations")
-            print(f"{self.name} just win the Minesweeper Game")
+            print(f"{self.name} just win the Minesweeper Game!!!")
+            print(f"Made by: Sad Nguyen with luv :DDD")
+            sys.exit()
 
 
 class SafeSpot:
@@ -118,23 +121,23 @@ class Map:
 
     def printMap(self):
         print("-----------------------------------------------------------------")
-        print(self.array1)
-        print(self.array2)
-        print(self.array3)
-        print(f"Booms left: {len(self.booms)}")
+        print(f"                           {self.array1}")
+        print(f"                           {self.array2}")
+        print(f"                           {self.array3}")
+        print(f"                           Booms left: {len(self.booms)}")
         print("-----------------------------------------------------------------")
 
     # # ? For checking boom
     def checkUp(self, x_coordinate, y_coordinate):
         for boom in self.booms:
-            if (x_coordinate, y_coordinate - 1) == boom.boomPos:
+            if (x_coordinate, y_coordinate + 1) == boom.boomPos:
                 return 1
 
         return 0
 
     def checkDown(self, x_coordinate, y_coordinate):
         for boom in self.booms:
-            if (x_coordinate, y_coordinate + 1) == boom.boomPos:
+            if (x_coordinate, y_coordinate - 1) == boom.boomPos:
                 return 1
 
         return 0
@@ -155,28 +158,28 @@ class Map:
 
     def checkUpRight(self, x_coordinate, y_coordinate):
         for boom in self.booms:
-            if (x_coordinate + 1, y_coordinate - 1) == boom.boomPos:
+            if (x_coordinate + 1, y_coordinate + 1) == boom.boomPos:
                 return 1
 
         return 0
 
     def checkRightDown(self, x_coordinate, y_coordinate):
         for boom in self.booms:
-            if (x_coordinate + 1, y_coordinate + 1) == boom.boomPos:
+            if (x_coordinate + 1, y_coordinate - 1) == boom.boomPos:
                 return 1
 
         return 0
 
     def checkDownLeft(self, x_coordinate, y_coordinate):
         for boom in self.booms:
-            if (x_coordinate - 1, y_coordinate + 1) == boom.boomPos:
+            if (x_coordinate - 1, y_coordinate - 1) == boom.boomPos:
                 return 1
 
         return 0
 
     def checkLeftUp(self, x_coordinate, y_coordinate):
         for boom in self.booms:
-            if (x_coordinate - 1, y_coordinate - 1) == boom.boomPos:
+            if (x_coordinate - 1, y_coordinate + 1) == boom.boomPos:
                 return 1
         return 0
 
@@ -191,22 +194,41 @@ class Map:
         self.nowBomb += self.checkDownLeft(x_coordinate, y_coordinate)
         self.nowBomb += self.checkRightDown(x_coordinate, y_coordinate)
 
+    def checkWin(self):
+        blankSpace = "#"
+        numBlankSpace = 0
+
+        for space in self.array1:
+            if blankSpace == space:
+                numBlankSpace += 1
+
+        for space in self.array2:
+            if blankSpace == space:
+                numBlankSpace += 1
+
+        for space in self.array3:
+            if blankSpace == space:
+                numBlankSpace += 1
+
+        if numBlankSpace == self.currentBomb:
+            self.player.winGame(True)
+
     # ? Use for player
     def checkBoom(self, x_coordinate: int, y_coordinate: int):
         for boom in self.booms:
-            print(translateintoHumanReadable(boom.boomPos))
+            # print(translateintoHumanReadable(boom.boomPos))
             # If Explode
             if (x_coordinate, y_coordinate) == boom.boomPos:
                 self.player.isExploded = True
                 self.player.checkSituation()
 
                 # If explode
-                if y_coordinate == 0:
-                    self.array1[x_coordinate] = boom.representation
-                elif y_coordinate == 1:
-                    self.array2[x_coordinate] = boom.representation
+                if x_coordinate == 0:
+                    self.array3[y_coordinate] = boom.representation
+                elif x_coordinate == 1:
+                    self.array2[y_coordinate] = boom.representation
                 else:
-                    self.array3[x_coordinate] = boom.representation
+                    self.array1[y_coordinate] = boom.representation
 
                 self.booms.remove(boom)
                 self.printMap()
@@ -216,11 +238,11 @@ class Map:
         self.checkSafe(x_coordinate, y_coordinate)
         # If don't explode
         if y_coordinate == 0:
-            self.array1[x_coordinate] = self.nowBomb
+            self.array3[x_coordinate] = self.nowBomb
         elif y_coordinate == 1:
             self.array2[x_coordinate] = self.nowBomb
         else:
-            self.array3[x_coordinate] = self.nowBomb
-        
+            self.array1[x_coordinate] = self.nowBomb
+
         self.printMap()
-        
+        self.checkWin()
