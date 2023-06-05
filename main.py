@@ -4,7 +4,12 @@ player1 = Player("Player")
 
 # 1 Boom has created
 booms = set()
-for time in range(0, 2):
+
+# To change the amount of booms
+# Change here
+boom_amounts = 2         
+
+for time in range(0, boom_amounts):
     boom = Boom()
     booms.add(boom)
 
