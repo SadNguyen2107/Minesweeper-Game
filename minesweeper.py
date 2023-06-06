@@ -29,6 +29,7 @@
 # One Player Game
 import random
 import sys
+import os
 
 
 def translateintoHumanReadable(Pos):
@@ -244,5 +245,6 @@ class Map:
         else:
             self.array1[x_coordinate] = self.nowBomb
 
+        os.system('cls')
         self.printMap()
         self.checkWin()
