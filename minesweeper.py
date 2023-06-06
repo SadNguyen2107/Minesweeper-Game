@@ -216,6 +216,7 @@ class Map:
 
     # ? Use for player
     def checkBoom(self, x_coordinate: int, y_coordinate: int):
+        os.system('cls')
         for boom in self.booms:
             # print(translateintoHumanReadable(boom.boomPos))
             # If Explode
@@ -245,6 +246,5 @@ class Map:
         else:
             self.array1[x_coordinate] = self.nowBomb
 
-        os.system('cls')
         self.printMap()
         self.checkWin()
