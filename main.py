@@ -1,4 +1,4 @@
-from tire import Player, Map, Boom, SafeSpot
+from minesweeper import Player, Map, Boom, SafeSpot
 
 player1 = Player("Player")
 
